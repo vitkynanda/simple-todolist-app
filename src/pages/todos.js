@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Box, Card, Typography } from "@mui/material";
 import TodoItem from "../components/TodoItem";
 import TodoInput from "../components/TodoInput";
+import { TodoContext } from "../context/todo-context";
 
 const containerStyle = {
   position: "absolute",
@@ -17,41 +18,22 @@ const cardStyle = {
 };
 
 const TodosPage = () => {
-  const [todos, setTodos] = useState([]);
-  const [selectedTodo, setSelectedTodo] = useState({});
-  const handleAddTodo = (todo) => setTodos([todo, ...todos]);
-  const handleSetEditTodo = (todo) => setSelectedTodo(todo);
-  const handleEditTodo = (editedTodo) => {
-    const updatedTodo = todos.map((todo) => ({
-      ...todo,
-      name: todo.id === editedTodo.id ? editedTodo.name : todo.name,
-    }));
-    setTodos(updatedTodo);
-    setSelectedTodo({});
-  };
-  const handleDeleteTodo = (deletedTodo) => {
-    const updatedTodo = todos.filter((todo) => todo.id !== deletedTodo.id);
-    setTodos(updatedTodo);
-  };
+  const { todos, handleSetEditTodo, handleDeleteTodo } =
+    useContext(TodoContext);
 
   return (
     <Box sx={containerStyle}>
       <Card sx={cardStyle}>
-        <Typography variant="h5" fontWeight="bold">
+        <Typography componont="p" variant="h5" fontWeight="bold">
           Simple Todo List App
         </Typography>
-        <TodoInput
-          onEdit={handleEditTodo}
-          onAdd={handleAddTodo}
-          selectedTodo={selectedTodo}
-        />
-        {todos.map((todo) => (
+        <TodoInput />
+        {todos.map((todo, index) => (
           <TodoItem
             key={todo.id}
             todo={todo}
-            onSetEdit={handleSetEditTodo}
-            onDelete={handleDeleteTodo}
-            selectedTodo={selectedTodo}
+            onSetEdit={() => handleSetEditTodo(todo, index)}
+            onDelete={() => handleDeleteTodo(index)}
           />
         ))}
       </Card>

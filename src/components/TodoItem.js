@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Stack,
   Checkbox,
@@ -7,9 +7,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import { TodoContext } from "../context/todo-context";
 
-const TodoItem = ({ todo, onDelete, onSetEdit, selectedTodo }) => {
+const TodoItem = ({ todo, onDelete, onSetEdit }) => {
   const [checked, setChecked] = useState(false);
+  const { selectedTodo } = useContext(TodoContext);
+
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       <Stack direction="row" alignItems="center" spacing={2}>
@@ -24,15 +27,12 @@ const TodoItem = ({ todo, onDelete, onSetEdit, selectedTodo }) => {
       </Stack>
       <Stack direction="row" spacing={1}>
         <Tooltip title="Edit">
-          <IconButton disabled={checked} onClick={() => onSetEdit(todo)}>
+          <IconButton disabled={checked} onClick={onSetEdit}>
             <Edit />
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete">
-          <IconButton
-            disabled={todo.id === selectedTodo.id}
-            onClick={() => onDelete(todo)}
-          >
+          <IconButton disabled={todo.id === selectedTodo.id} onClick={onDelete}>
             <Delete />
           </IconButton>
         </Tooltip>
