@@ -2,7 +2,8 @@ import { Stack, Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, { useContext, useEffect, useState } from "react";
 import { TodoContext } from "../context/todo-context";
-import { getUUID } from "../utils";
+
+const defaultTodoState = { task_name: "", task_status: 0 };
 
 const TodoInput = () => {
   const {
@@ -11,18 +12,19 @@ const TodoInput = () => {
     handleEditTodo: onEdit,
   } = useContext(TodoContext);
 
-  const [todo, setTodo] = useState({ name: "" });
-  const handleChangeInput = (e) => setTodo({ ...todo, name: e.target.value });
+  const [todo, setTodo] = useState(defaultTodoState);
+  const handleChangeInput = (e) =>
+    setTodo({ ...todo, task_name: e.target.value });
 
   const handleAddTodo = (e) => {
     e.preventDefault();
-    onAdd({ ...todo, id: getUUID() });
-    setTodo({ name: "" });
+    onAdd(todo);
+    setTodo(defaultTodoState);
   };
   const handleEditTodo = (e) => {
     e.preventDefault();
     onEdit(todo, selectedTodo.todoIndex);
-    setTodo({ name: "" });
+    setTodo(defaultTodoState);
   };
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const TodoInput = () => {
       onSubmit={selectedTodo.id ? handleEditTodo : handleAddTodo}
     >
       <TextField
-        value={todo.name}
+        value={todo.task_name}
         onChange={handleChangeInput}
         size="small"
         label={selectedTodo.id ? "Edit Todo" : "Add Todo"}

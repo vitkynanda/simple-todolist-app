@@ -18,8 +18,7 @@ const cardStyle = {
 };
 
 const TodosPage = () => {
-  const { todos, handleSetEditTodo, handleDeleteTodo } =
-    useContext(TodoContext);
+  const { todos } = useContext(TodoContext);
 
   return (
     <Box sx={containerStyle}>
@@ -28,13 +27,8 @@ const TodosPage = () => {
           Simple Todo List App
         </Typography>
         <TodoInput />
-        {todos.map((todo, index) => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            onSetEdit={() => handleSetEditTodo(todo, index)}
-            onDelete={() => handleDeleteTodo(index)}
-          />
+        {todos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} />
         ))}
       </Card>
     </Box>

@@ -1,4 +1,5 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { addTodo, deleteTodo, getTodos, updateTodo } from "../services/api";
 
 export const TodoContext = createContext({
   todos: [],
@@ -10,22 +11,37 @@ export const TodoContext = createContext({
 });
 
 const TodoContextProvider = ({ children }) => {
+  const [refetch, setRefetch] = useState(false);
   const [todos, setTodos] = useState([]);
   const [selectedTodo, setSelectedTodo] = useState({});
-  const handleAddTodo = (todo) => setTodos([todo, ...todos]);
-  const handleSetEditTodo = (todo, todoIndex) =>
-    setSelectedTodo({ ...todo, todoIndex });
-  const handleEditTodo = (editedTodo, todoIndex) => {
-    const values = [...todos];
-    values[todoIndex].name = editedTodo.name;
-    setTodos(values);
+
+  const handleAddTodo = async (todo) => {
+    const res = await addTodo(todo);
+    if (res.status_code === 201) setRefetch(!refetch);
+  };
+
+  const handleEditTodo = async ({ id, task_name, task_status }) => {
+    const res = await updateTodo(id, {
+      task_name,
+      task_status,
+    });
+    if (res.status_code === 200) setRefetch(!refetch);
     setSelectedTodo({});
   };
-  const handleDeleteTodo = (index) => {
-    const values = [...todos];
-    values.splice(index, 1);
-    setTodos(values);
+
+  const handleDeleteTodo = async (todoId) => {
+    const res = await deleteTodo(todoId);
+    if (res.status_code === 200) setRefetch(!refetch);
   };
+
+  const handleSetEditTodo = (todo) => setSelectedTodo(todo);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getTodos();
+      if (res.status_code === 200) setTodos(res.data);
+    })();
+  }, [refetch]);
 
   return (
     <TodoContext.Provider
