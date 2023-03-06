@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Stack,
   Checkbox,
@@ -6,12 +6,14 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
-import { TodoContext } from "../context/todo-context";
+import { Delete, Edit, RemoveRedEye } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { useTodoStore } from "../store/todo-store";
 
 const TodoItem = ({ todo }) => {
-  const { selectedTodo, handleSetEditTodo, handleDeleteTodo, handleEditTodo } =
-    useContext(TodoContext);
+  const navigate = useNavigate();
+  const { selectedTodo, handleDeleteTodo, handleSetEditTodo, handleEditTodo } =
+    useTodoStore();
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -50,6 +52,11 @@ const TodoItem = ({ todo }) => {
             onClick={() => handleDeleteTodo(todo.id)}
           >
             <Delete />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Show Detail">
+          <IconButton onClick={() => navigate(`/todo-app/${todo.id}`)}>
+            <RemoveRedEye />
           </IconButton>
         </Tooltip>
       </Stack>

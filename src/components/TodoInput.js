@@ -1,29 +1,19 @@
 import { Stack, Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import React, { useContext, useEffect, useState } from "react";
-import { TodoContext } from "../context/todo-context";
+import React, { useEffect, useState } from "react";
+import { useTodoStore } from "../store/todo-store";
 
 const defaultTodoState = { task_name: "", task_status: 0 };
 
 const TodoInput = () => {
-  const {
-    selectedTodo,
-    handleAddTodo: onAdd,
-    handleEditTodo: onEdit,
-  } = useContext(TodoContext);
-
+  const { selectedTodo, handleAddTodo, handleEditTodo } = useTodoStore();
   const [todo, setTodo] = useState(defaultTodoState);
   const handleChangeInput = (e) =>
     setTodo({ ...todo, task_name: e.target.value });
 
-  const handleAddTodo = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd(todo);
-    setTodo(defaultTodoState);
-  };
-  const handleEditTodo = (e) => {
-    e.preventDefault();
-    onEdit(todo, selectedTodo.todoIndex);
+    selectedTodo.id ? handleEditTodo(todo) : handleAddTodo(todo);
     setTodo(defaultTodoState);
   };
 
@@ -36,22 +26,18 @@ const TodoInput = () => {
       component="form"
       direction="row"
       alignItems="center"
-      spacing={2}
+      justifyContent="space-between"
       my={2}
-      onSubmit={selectedTodo.id ? handleEditTodo : handleAddTodo}
+      onSubmit={handleSubmit}
     >
       <TextField
         value={todo.task_name}
         onChange={handleChangeInput}
         size="small"
         label={selectedTodo.id ? "Edit Todo" : "Add Todo"}
-        sx={{ width: "70%" }}
+        sx={{ width: "75%" }}
       />
-      <Button
-        type="submit"
-        onClick={selectedTodo.id ? handleEditTodo : handleAddTodo}
-        variant="contained"
-      >
+      <Button type="submit" variant="contained">
         {selectedTodo.id ? "Edit Todo" : "Add Todo"}
       </Button>
     </Stack>

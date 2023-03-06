@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import { Box, Card, Typography } from "@mui/material";
 import TodoItem from "../components/TodoItem";
 import TodoInput from "../components/TodoInput";
-import { TodoContext } from "../context/todo-context";
+import { Outlet } from "react-router-dom";
+import { useTodoStore } from "../store/todo-store";
 
 const containerStyle = {
   position: "absolute",
@@ -18,10 +19,15 @@ const cardStyle = {
 };
 
 const TodosPage = () => {
-  const { todos } = useContext(TodoContext);
+  const { todos, getTodos } = useTodoStore();
+
+  useEffect(() => {
+    getTodos();
+  }, [getTodos]);
 
   return (
     <Box sx={containerStyle}>
+      <Outlet />
       <Card sx={cardStyle}>
         <Typography componont="p" variant="h5" fontWeight="bold">
           Simple Todo List App
