@@ -2,9 +2,9 @@ import { create } from "zustand";
 import { addTodo, deleteTodo, getTodos, updateTodo } from "../services/api";
 
 const initialState = { todos: [], selectedTodo: {} };
+
 export const useTodoStore = create((set, get) => ({
   ...initialState,
-
   handleAddTodo: async (todo) => {
     const res = await addTodo(todo);
     if (res.status_code === 201) get().getTodos();

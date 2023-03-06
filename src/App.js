@@ -1,6 +1,7 @@
 import TodosPage from "./pages/todos-page";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import TodoDetail from "./pages/todo-detail";
+import { Typography } from "@mui/material";
 
 const router = createBrowserRouter([
   {
@@ -9,17 +10,13 @@ const router = createBrowserRouter([
     children: [
       {
         path: "sub-path",
-        element: <h1>Sub path of todo</h1>,
+        element: <Typography>Sub path of todo</Typography>,
       },
     ],
   },
   {
     path: "/todo-app/:id",
     element: <TodoDetail />,
-  },
-  {
-    path: "/hello",
-    element: <h1>Hello User</h1>,
   },
 ]);
 
